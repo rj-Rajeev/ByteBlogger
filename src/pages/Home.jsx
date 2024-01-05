@@ -25,8 +25,8 @@ function Home() {
       <>
         <div className="banner w-full h-[70vh] relative">
           <img
-            src="public/banner01.jpg"
-            alt=""
+            src="/banner01.jpg"
+            alt="banner01"
             className="w-full h-full object-cover object-left"
           />
           <h1 className=" absolute top-1/2 left-[8vw] font-extrabold text-2xl shadow-xl ">ByteBlogger</h1>
