@@ -27,18 +27,10 @@ function Login() {
       setError(error.message);
     }
   };
-
-  // useEffect(() => {
-  //   const storedUserData = localStorage.getItem("userData");
-  //   if (storedUserData) {
-  //     const userData = JSON.parse(storedUserData);
-  //     dispatch(authLogin({ userData }));
-  //   }
-  // }, []);
-
+  
   return (
     <>
-      <div className="main w-full h-[70vh] flex flex-col items-center justify-center">
+      <div className="main w-full h-[90vh] pt-32 flex flex-col items-center justify-center">
         <h1 className="font-extrabold p-2">Login Here</h1>
         <form
           onSubmit={handleSubmit(loginFormSubmit)}

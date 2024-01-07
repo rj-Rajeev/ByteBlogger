@@ -31,7 +31,7 @@ function Nav() {
   ];
   return (
     <>
-      <nav className="bg-black text-white font-semibold">
+      <nav className="bg-black text-white font-semibold ">
         <ul className="h-10 flex items-center justify-center gap-10">
           {navLinks.map((Item) =>
             Item.active ? (

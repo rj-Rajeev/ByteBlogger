@@ -5,7 +5,7 @@ const Profile = () => {
   const userData = useSelector((state) => state.auth.userData);
   return (
     <>
-      <div className="profile items-center justify-center w-full flex flex-col my-10">
+      <div className="profile items-center justify-center w-full h-[92vh] flex flex-col">
         <h1 className="font-extrabold m-5">Your details:</h1>
         <div className="detsBox border-2 border-black rounded-xl p-10">
           <h4 className="font-bold">

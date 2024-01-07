@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import RTE from "../components/RTE";
 import { set, useForm } from "react-hook-form";
 import databaseService from "../appwrite/databaseService";
@@ -11,9 +11,11 @@ import Loading from "./Loading";
 const NewPost = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
- 
+  
   const { state } = useLocation();
   const post = state && state.post;
+  
+  const [filePreview, setFilePreview] = useState(false);
 
   const { register, handleSubmit, control, watch, setValue, getValues } =
     useForm({
@@ -35,60 +37,74 @@ const NewPost = () => {
     setLoading(true);
     if (post) {
       try {
-       let featuredImage = post.featuredImage;
-      const newFile = data.file[0];
-      const updatedFile = await storageService.updateFile({
-        featuredImage,
-        newFile,
-      });
-      featuredImage = updatedFile.$id;
-
-      if (updatedFile) {
-        const updatedPost = await databaseService.updatePost(post.$id, {
-          ...data,
+        let featuredImage = post.featuredImage;
+        const newFile = data.file[0];
+        const updatedFile = await storageService.updateFile({
           featuredImage,
+          newFile,
         });
-        if (updatedPost) {
-          dispatch(updatePost(updatedPost))
-          navigate(`/post/${updatedPost.slug}`);
+        featuredImage = updatedFile.$id;
+
+        if (updatedFile) {
+          const updatedPost = await databaseService.updatePost(post.$id, {
+            ...data,
+            featuredImage,
+          });
+          if (updatedPost) {
+            dispatch(updatePost(updatedPost));
+            navigate(`/post/${updatedPost.slug}`);
+          }
         }
-      }
       } catch (error) {
-        
         console.log(error);
       }
-     
     } else {
       setLoading(true);
       let featuredImage = "";
       const slug = data.title;
+      const content = String(data.content);
       if (data.file) {
         const file = data.file[0]
           ? await storageService.uploadFile(data.file[0])
           : null;
-        featuredImage = file?file.$id:"";
+        featuredImage = file ? file.$id : "";
       }
       const Newpost = await databaseService.createPost({
         ...data,
+        content,
         featuredImage,
         slug,
         userId,
       });
       if (Newpost) {
-        dispatch(updatePost(Newpost))
+        dispatch(updatePost(Newpost));
         navigate(`/post/${Newpost.slug}`);
         setLoading(false);
       }
     }
   };
 
-  return loading?(<Loading/>):(
+  const onFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFilePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="wrapper flex w-full  p-10"
+        className="wrapper flex w-full pt-32 p-10"
       >
-        <div className="editor w-3/4 h-full">
+        <div className="editor w-3/4">
           <RTE
             control={control}
             name={"content"}
@@ -96,12 +112,13 @@ const NewPost = () => {
           />
         </div>
         <div className="options w-1/4  bg-slate-600 p-2">
-          <h1 className="text-center font-bold text-2xl text-white">
-            {post?"Update Post":"Add New Post"}
+          <h1 className="text-center font-bold text-xl text-white">
+            {post ? "Update Post" : "Add New Post"}
           </h1>
+          <hr className=" opacity-40" />
           <label
             htmlFor="title"
-            className="block text-lg text-white font-semibold"
+            className="block text-white font-medium text-s"
           >
             Title:
           </label>
@@ -114,16 +131,23 @@ const NewPost = () => {
 
           <label
             htmlFor="file"
-            className="block text-lg text-white font-semibold mt-2"
+            className="block text-white font-medium text-s"
           >
-            ADD Files:
+            Add Thumbnil
           </label>
           <input
-            {...register("file", { required: post?false:false })}
+            {...register("file", { required: post ? false : true })}
             type="file"
             id="file"
-            className="w-full h-10 p-2 focus:outline-none text-white font-bold"
+            className="w-full h-10 focus:outline-none text-white font-bold"
+            onChange={onFileChange}
+
           />
+          {filePreview && (
+            <div className="post bg-red-300 w-64 h-36 m-auto ">
+              <img src={filePreview} alt="File Preview" className=" w-full" />
+            </div>
+          )}
 
           <label
             htmlFor="status"

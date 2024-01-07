@@ -9,8 +9,9 @@ const Header = () => {
   const isUser = useSelector((state) => state.auth.status);
   return (
     <>
+      <div className="fixed z-50 w-full max-h-fit">
       <header
-        className={`w-full h-20 bg-zinc-800 pl-10 pr-10 flex items-center justify-between`}
+        className={`w-full h-20 bg-zinc-800 px-10 flex items-center justify-between `}
       >
         <div className="logo">
           <img src="/white.png" alt="" className="w-20" />
@@ -28,6 +29,7 @@ const Header = () => {
         </div>
       </header>
       <Nav />
+      </div>
     </>
   );
 };

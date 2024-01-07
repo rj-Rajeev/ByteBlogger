@@ -24,8 +24,8 @@ function Articles() {
   return (
     <>
       {loading?(<Loading/>):(
-      <div className="main w-full min-h-[70vh]">
-      <div className="content w-full h-fit flex gap-1 flex-wrap">
+      <div className="main w-full min-h-[92vh] bg-slate-400 pt-32">
+      <div className="content w-full h-fit flex gap-1 flex-wrap p-2">
         {posts.length!==0?(
           posts.map((post) => (
             <div key={post.$id}>
