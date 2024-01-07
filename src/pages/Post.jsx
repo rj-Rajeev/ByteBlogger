@@ -105,7 +105,8 @@ const Post = () => {
             dangerouslySetInnerHTML={{ __html: post ? post.content : "" }}
           />
         </div>
-        <div className="featured m-10 h-3/5 overflow-auto fixed right-14 hide-scrollbar border-t-2 border-b-2 border-black">
+        <div className="featured m-10 pt-4 h-3/5 overflow-auto fixed right-14 hide-scrollbar  border-b-2 border-black">
+        <p className="  z-50 fixed -mt-4 bg-white w-48 border-b-2 border-black">More content</p>
         {posts.length!==0?(
           posts.map((post) => (
             <div key={post.$id}>
