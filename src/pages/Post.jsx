@@ -20,7 +20,7 @@ const Post = () => {
     post && curruntUser ? post.userId === curruntUser.$id : false;
 
   const isAdmin = () => {
-    return curruntUser.labels && curruntUser.labels.includes("admin");
+    return curruntUser && curruntUser.labels && curruntUser.labels.includes("admin");
   };
 
   useEffect(() => {
