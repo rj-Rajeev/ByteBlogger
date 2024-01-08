@@ -19,19 +19,23 @@ const Post = () => {
   const isAuthor =
     post && curruntUser ? post.userId === curruntUser.$id : false;
 
-    useEffect(() => {
-      const fetchPosts = async () => {
-        try {
-          setLoading(true);
-          const postsData = await databaseService.getPosts();
-          setPosts(postsData.documents);
-        } catch (error) {
-          console.log("Error fetching posts:", error);
-        }
-      };
-  
-      fetchPosts();
-    }, []);
+  const isAdmin = () => {
+    return curruntUser.labels && curruntUser.labels.includes("admin");
+  };
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
+        const postsData = await databaseService.getPosts();
+        setPosts(postsData.documents);
+      } catch (error) {
+        console.log("Error fetching posts:", error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -61,24 +65,30 @@ const Post = () => {
       });
   };
 
-  return loading ? <Loading/>:(
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <div className="hero w-full h-full pt-32 flex">
         <div className="hero w-3/4 min-h-screen p-10">
           <div className="poster w-full flex items-center justify-center ">
             {post && post.featuredImage !== "" ? (
-              <img
-                src={
-                  post ? storageService.getFilePreview(post.featuredImage) : ""
-                }
-                alt={post ? post.title : ""}
-                className=" w-4/5"
-              />
+              <>
+                <img
+                  src={
+                    post
+                      ? storageService.getFilePreview(post.featuredImage)
+                      : ""
+                  }
+                  alt={post ? post.title : ""}
+                  className=" w-4/5"
+                />
+              </>
             ) : (
               ""
             )}
           </div>
-          {isAuthor ? (
+          {isAuthor || (isAdmin() && isAdmin) ? (
             <div className="btn">
               <button
                 onClick={() => navigate("/newPost", { state: { post } })}
@@ -106,14 +116,20 @@ const Post = () => {
           />
         </div>
         <div className="featured m-10 pt-4 h-3/5 overflow-auto fixed right-14 hide-scrollbar  border-b-2 border-black">
-        <p className="  z-50 fixed -mt-4 bg-white w-48 border-b-2 border-black">More content</p>
-        {posts.length!==0?(
-          posts.map((post) => (
-            <div key={post.$id}>
-              <PostCard post={post} className={`m-2`}/>
-            </div>
-          ))
-        ):(<h1 className=" text-center w-full font-extrabold text-4xl">There are no posts available.</h1>)}
+          <p className="  z-50 fixed -mt-4 bg-white w-48 border-b-2 border-black">
+            More content
+          </p>
+          {posts.length !== 0 ? (
+            posts.map((post) => (
+              <div key={post.$id}>
+                <PostCard post={post} className={`m-2`} />
+              </div>
+            ))
+          ) : (
+            <h1 className=" text-center w-full font-extrabold text-4xl">
+              There are no posts available.
+            </h1>
+          )}
         </div>
       </div>
     </>

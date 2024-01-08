@@ -5,17 +5,20 @@ import Loading from "./Loading";
 import { SlArrowLeftCircle, SlArrowRightCircle } from "react-icons/sl";
 function Home() {
   const [posts, setPosts] = useState([]);
+  const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setError("");
         setLoading(true);
         const postsData = await databaseService.getPosts();
         setPosts(postsData.documents);
         setLoading(false);
       } catch (error) {
-        console.log("Error fetching posts:", error);
+        setError(error);
+        setLoading(false);
       }
     };
 

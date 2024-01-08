@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 const Profile = () => {
   const userData = useSelector((state) => state.auth.userData);
+  
   return (
     <>
       <div className="profile items-center justify-center w-full h-[92vh] flex flex-col">

@@ -15,7 +15,10 @@ const NewPost = () => {
   const { state } = useLocation();
   const post = state && state.post;
   
-  const [filePreview, setFilePreview] = useState(false);
+  const [filePreview, setFilePreview] = useState(post && storageService.getFilePreview(post.featuredImage));
+  
+
+
 
   const { register, handleSubmit, control, watch, setValue, getValues } =
     useForm({
@@ -39,13 +42,14 @@ const NewPost = () => {
       try {
         let featuredImage = post.featuredImage;
         const newFile = data.file[0];
-        const updatedFile = await storageService.updateFile({
-          featuredImage,
-          newFile,
-        });
-        featuredImage = updatedFile.$id;
-
-        if (updatedFile) {
+        if (newFile) {
+          const deleteOldFile = await storageService.deleteFile(featuredImage);
+          if (deleteOldFile) {
+            const uploadNewFile = await storageService.uploadFile(newFile)
+            featuredImage = uploadNewFile ? uploadNewFile.$id : "";
+          }
+        }
+        if (post) {
           const updatedPost = await databaseService.updatePost(post.$id, {
             ...data,
             featuredImage,
@@ -144,7 +148,7 @@ const NewPost = () => {
 
           />
           {filePreview && (
-            <div className="post bg-red-300 w-64 h-36 m-auto ">
+            <div className="post bg-red-300 w-64 h-36 m-auto object-cover object-center overflow-hidden ">
               <img src={filePreview} alt="File Preview" className=" w-full" />
             </div>
           )}
