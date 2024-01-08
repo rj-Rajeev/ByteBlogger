@@ -10,16 +10,15 @@ import Loading from "./Loading";
 
 const NewPost = () => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  
   const { state } = useLocation();
   const post = state && state.post;
-  
-  const [filePreview, setFilePreview] = useState(post && storageService.getFilePreview(post.featuredImage));
-  
 
-
-
+  const [filePreview, setFilePreview] = useState(
+    post && storageService.getFilePreview(post.featuredImage)
+  );
+  const dispatch = useDispatch();
   const { register, handleSubmit, control, watch, setValue, getValues } =
     useForm({
       defaultValues: {
@@ -34,10 +33,9 @@ const NewPost = () => {
     state.auth.userData ? state.auth.userData.$id : ""
   );
 
-  const dispatch = useDispatch();
-
   const onSubmit = async (data) => {
     setLoading(true);
+    setError("");
     if (post) {
       try {
         let featuredImage = post.featuredImage;
@@ -45,7 +43,7 @@ const NewPost = () => {
         if (newFile) {
           const deleteOldFile = await storageService.deleteFile(featuredImage);
           if (deleteOldFile) {
-            const uploadNewFile = await storageService.uploadFile(newFile)
+            const uploadNewFile = await storageService.uploadFile(newFile);
             featuredImage = uploadNewFile ? uploadNewFile.$id : "";
           }
         }
@@ -59,30 +57,39 @@ const NewPost = () => {
             navigate(`/post/${updatedPost.slug}`);
           }
         }
-      } catch (error) {
-        console.log(error);
+      } catch (err) {
+        console.log(err);
+        setError(err.message);
+        setLoading(false);
       }
     } else {
-      setLoading(true);
-      let featuredImage = "";
-      const slug = data.title;
-      const content = String(data.content);
-      if (data.file) {
-        const file = data.file[0]
-          ? await storageService.uploadFile(data.file[0])
-          : null;
-        featuredImage = file ? file.$id : "";
-      }
-      const Newpost = await databaseService.createPost({
-        ...data,
-        content,
-        featuredImage,
-        slug,
-        userId,
-      });
-      if (Newpost) {
-        dispatch(updatePost(Newpost));
-        navigate(`/post/${Newpost.slug}`);
+      try {
+        setError("");
+        setLoading(true);
+        let featuredImage = "";
+        const slug = data.title;
+        const content = String(data.content);
+        if (data.file) {
+          const file = data.file[0]
+            ? await storageService.uploadFile(data.file[0])
+            : null;
+          featuredImage = file ? file.$id : "";
+        }
+        const Newpost = await databaseService.createPost({
+          ...data,
+          content,
+          featuredImage,
+          slug,
+          userId,
+        });
+        if (Newpost) {
+          dispatch(updatePost(Newpost));
+          navigate(`/post/${Newpost.slug}`);
+          setLoading(false);
+        }
+      } catch (err) {
+        console.log(err);
+        setError(err.message);
         setLoading(false);
       }
     }
@@ -106,7 +113,7 @@ const NewPost = () => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="wrapper flex w-full pt-32 p-10"
+        className="wrapper flex w-full pt-32 p-10 pb-1"
       >
         <div className="editor w-3/4">
           <RTE
@@ -133,10 +140,7 @@ const NewPost = () => {
             className="w-full h-10 p-2 focus:outline-none font-bold"
           />
 
-          <label
-            htmlFor="file"
-            className="block text-white font-medium text-s"
-          >
+          <label htmlFor="file" className="block text-white font-medium text-s">
             Add Thumbnil
           </label>
           <input
@@ -145,7 +149,6 @@ const NewPost = () => {
             id="file"
             className="w-full h-10 focus:outline-none text-white font-bold"
             onChange={onFileChange}
-
           />
           {filePreview && (
             <div className="post bg-red-300 w-64 h-36 m-auto object-cover object-center overflow-hidden ">
@@ -176,6 +179,7 @@ const NewPost = () => {
           </button>
         </div>
       </form>
+      {error && <h4 className="text-red-500 my-2 ml-8 "> {error}</h4>}
     </>
   );
 };

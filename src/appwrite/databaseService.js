@@ -21,6 +21,7 @@ export class DatabaseService {
         { title, slug, content, featuredImage, status, userId },
       );
     } catch (error) {
+      console.log(error);
       throw new Error(error.message);
     }
   }
