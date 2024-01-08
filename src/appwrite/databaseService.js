@@ -21,7 +21,7 @@ export class DatabaseService {
         { title, slug, content, featuredImage, status, userId },
       );
     } catch (error) {
-      throw error;
+      throw new Error(error.message);
     }
   }
 
@@ -34,7 +34,7 @@ export class DatabaseService {
         { title, slug, content, featuredImage, status },
       );
     } catch (error) {
-      throw error;
+      throw new Error(error.message);
     }
   }
 
@@ -47,8 +47,7 @@ export class DatabaseService {
       );
       return true;
     } catch (error) {
-      throw error;
-      return false;
+      throw new Error(error.message);
     }
   }
 
@@ -60,8 +59,7 @@ export class DatabaseService {
         slug,
       );
     } catch (error) {
-      throw error;
-      return false;
+      throw new Error(error.message);
     }
   }
 
@@ -73,8 +71,7 @@ export class DatabaseService {
         queries,
       );
     } catch (error) {
-      throw error;
-      return false;
+      throw new Error(error.message);
     }
   }
 }

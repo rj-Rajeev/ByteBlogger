@@ -23,10 +23,10 @@ export class AuthService {
       if (userAccount) {
         return this.login({ email, password });
       } else {
-        return userAccount;
+        throw new Error("User Account Creation Failed")
       }
     } catch (error) {
-      console.log(error);
+      throw new Error(error.message);
     }
   }
 
@@ -36,6 +36,7 @@ export class AuthService {
       return userLogin;
     } catch (error) {
       console.log(error.message);
+      throw new Error(error.message);
     }
   }
 
@@ -44,9 +45,8 @@ export class AuthService {
       return await this.account.get();
     } catch (error) {
       console.log(error);
+      throw new Error(error.message);
     }
-
-    return null;
   }
 
   async logout() {
@@ -54,6 +54,7 @@ export class AuthService {
       return await this.account.deleteSessions();
     } catch (error) {
       console.log(error);
+      throw new Error(error.message);
     }
   }
 }

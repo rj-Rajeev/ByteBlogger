@@ -16,8 +16,12 @@ function Home() {
         const postsData = await databaseService.getPosts();
         setPosts(postsData.documents);
         setLoading(false);
-      } catch (error) {
-        setError(error);
+      } catch (err) {
+        if (err.message.includes("Network")) {
+          setError("Please check your connection.📌");
+        } else {
+          setError(err.message);
+        }
         setLoading(false);
       }
     };
@@ -73,16 +77,14 @@ function Home() {
               className="posts  w-full h-[90%] flex items-center px-4 overflow-auto hide-scrollbar relative"
             >
               <div className="div flex gap-2 ">
-                {posts.length !== 0 ? (
+                {error ? (
+                  <p className="text-center text-red-500 ml-40 text-xl">{error}</p>
+                ) : (
                   posts.map((post) => (
                     <div key={post.$id}>
                       <PostCard post={post} />
                     </div>
                   ))
-                ) : (
-                  <h1 className=" text-center w-full font-extrabold text-4xl">
-                    There are no posts available.
-                  </h1>
                 )}
               </div>
             </div>

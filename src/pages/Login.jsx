@@ -6,14 +6,18 @@ import { login as authLogin } from "../services/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [error, setError] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const loginFormSubmit = async (data) => {
-    setError("");
     try {
+      setError("");
       const session = await authService.login(data);
       if (session) {
         const userData = await authService.getCurrentUser();
@@ -23,11 +27,12 @@ function Login() {
           navigate("/");
         }
       }
-    } catch (error) {
-      setError(error.message);
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
     }
   };
-  
+
   return (
     <>
       <div className="main w-full h-[90vh] pt-32 flex flex-col items-center justify-center">
@@ -44,12 +49,21 @@ function Login() {
             className="block border p-2 m-2 w-full "
           />
           <input
-            {...register("password", { required: true })}
+            {...register("password", {
+              required: true,
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters",
+              },
+            })}
             type="password"
             id="password"
             placeholder="Enter Your password"
             className="block border p-2 m-2 w-full "
           />
+          {errors.password && (
+            <p className=" text-xs text-red-600">{errors.password.message}</p>
+          )}
           <button
             type="submit"
             className="bg-black text-white rounded-lg py-1 w-full active:scale-105"
@@ -63,7 +77,7 @@ function Login() {
             Create Account
           </Link>
         </p>
-        <p className="text-sm text-red-600">{error}</p>
+        {error && <p className="text-sm text-red-600">{error}</p>}
       </div>
     </>
   );

@@ -78,7 +78,7 @@ const Post = () => {
                   src={
                     post
                       ? storageService.getFilePreview(post.featuredImage)
-                      : ""
+                      : "" 
                   }
                   alt={post ? post.title : ""}
                   className=" w-4/5"
