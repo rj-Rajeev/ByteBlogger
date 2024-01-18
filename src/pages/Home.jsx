@@ -54,8 +54,8 @@ function Home() {
   ) : (
     <>
       <div className="pt-28">
-        <div className="banner  w-full h-[75vh] relative bg-[url('/banner01.jpg')] bg-cover bg-center">
-          <div className="latest w-1/2 h-64 bg-slate-50 absolute right-0 bottom-2 backdrop-filter backdrop-blur-sm bg-opacity-25">
+        <div className="banner  w-screen h-[83vh] relative bg-[url('/banner01.jpg')] bg-cover bg-center">
+          <div className="latest w-2/3 h-64 bg-slate-50 absolute right-1 bottom-6 backdrop-filter backdrop-blur-sm bg-opacity-25">
             <span className=" text-black text-xs font-semibold mx-2">
               Most Recent Posts...
             </span>
@@ -78,7 +78,9 @@ function Home() {
             >
               <div className="div flex gap-2 ">
                 {error ? (
-                  <p className="text-center text-red-500 ml-40 text-xl">{error}</p>
+                  <p className="text-center text-red-500 ml-40 text-xl">
+                    {error}
+                  </p>
                 ) : (
                   posts.map((post) => (
                     <div key={post.$id}>
@@ -89,12 +91,12 @@ function Home() {
               </div>
             </div>
           </div>
-          <h1 className=" absolute top-1/2 left-[8vw] font-extrabold text-7xl shadow-xl ">
+          <h1 className=" absolute top-1/3 md:top-1/2 left-[8vw] font-extrabold text-5xl shadow-xl ">
             ByteBlogger
+            <p className=" text-sm mt-2 ml-2">
+              Read, Post and Achive your Goal ... 👒
+            </p>
           </h1>
-          <p className=" absolute top-[16vw] left-[8vw] font-bold ">
-            Read, Post and Achive your Goal ... 👒
-          </p>
         </div>
       </div>
     </>

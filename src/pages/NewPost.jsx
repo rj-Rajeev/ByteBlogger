@@ -113,16 +113,16 @@ const NewPost = () => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="wrapper flex w-full pt-32 p-10 pb-1"
+        className="wrapper flex flex-col md:flex-row w-full pt-32 p-10 pb-1"
       >
-        <div className="editor w-3/4">
+        <div className="editor w-full">
           <RTE
             control={control}
             name={"content"}
             defaultValue={getValues("content")}
           />
         </div>
-        <div className="options w-1/4  bg-slate-600 p-2">
+        <div className="options w-full md:w-1/4  bg-slate-600 p-2">
           <h1 className="text-center font-bold text-xl text-white">
             {post ? "Update Post" : "Add New Post"}
           </h1>

@@ -16,7 +16,7 @@ const Header = () => {
         <div className="logo">
           <img src="/white.png" alt="" className="w-20" />
         </div>
-        <div className="Name text-white text-5xl font-extrabold ">
+        <div className="Name hidden text-white text-5xl font-extrabold md:block">
           ByteBlogger
         </div>
         <div className="profile">

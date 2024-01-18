@@ -29,18 +29,24 @@ function Articles() {
 
   return (
     <>
-      {loading?(<Loading/>):(
-      <div className="main w-full min-h-[92vh] bg-slate-400 pt-32">
-      <div className="content w-full h-fit flex gap-1 flex-wrap p-2">
-        {!error?(
-          posts.map((post) => (
-            <div key={post.$id}>
-              <PostCard post={post} />
-            </div>
-          ))
-        ):(<h1 className=" text-center w-full font-extrabold text-red-500 text-4xl mt-40">{error}</h1>)}
-      </div>
-      </div>
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className="main w-full min-h-[92vh] bg-slate-400 pt-32">
+          <div className="content w-full h-fit flex justify-around flex-wrap p-2">
+            {!error ? (
+              posts.map((post) => (
+                <div key={post.$id}>
+                  <PostCard post={post} />
+                </div>
+              ))
+            ) : (
+              <h1 className=" text-center w-full font-extrabold text-red-500 text-4xl mt-40">
+                {error}
+              </h1>
+            )}
+          </div>
+        </div>
       )}
     </>
   );
